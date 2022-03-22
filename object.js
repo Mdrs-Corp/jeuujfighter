@@ -58,35 +58,45 @@ class Entity{
 class Obstacle extends Entity{}
 
 
-const gravity = 0.05;
+const gravity = 0.13;
 
 class Player extends Entity{
   constructor(x, y){
     super(x, y, 10, 10);
     this.vx = 0;
     this.vy = 0;
-    this.speed = 1.5;
     this.color = "rgb(145, 24, 201)";
 
     this.inputs = [false, false, false, false];
+    this.prevInputs = [false, false, false, false];
   }
 
   update(){
 
     if(this.inputs[0]){
-      this.vx -= 1;
+      this.vx -= 0.2;
     }
     if (this.inputs[2]) {
-      this.vx += 1;
+      this.vx += 0.2;
     }
 
-    this.x += this.vx * this.speed;
-    this.y += this.vy * this.speed;
+    if (this.inputs[3]) {
+      this.vy += 0.1;
+    }
+
+    if (this.inputs[1] && !this.prevInputs[1]) {
+      this.vy -= 3;
+    }
+
+    this.x += this.vx;
+    this.y += this.vy
 
     this.vy += gravity;
     this.vy = Math.min(this.vy, 5);
 
     this.vx *= 0.9;
+
+    this.prevInputs =  [...this.inputs];
   }
 
 }
