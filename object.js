@@ -125,8 +125,8 @@ class AttackHitBox extends Entity {
 
   collide(entity) {
     if (entity.id != this.sender) {
-      entity.ax += this.dx * Math.min(5, entity.percent );
-      entity.ay += this.dy * Math.min(5, entity.percent );
+      entity.ax += this.dx * Math.max(2, entity.percent / 10);
+      entity.ay += this.dy * Math.max(2, entity.percent / 10);
 
       entity.percent += this.damage;
     }
