@@ -16,6 +16,8 @@ class Entity{
     this.color = "white";
     this.toDelete = false;
     this.zIndex = 0;
+
+    this.collidedTypes = [];
   };
 
 
@@ -23,22 +25,6 @@ class Entity{
     ctx.fillStyle = this.color;
     ctx.fillRect(this.x, this.y, this.w, this.h);
   };
-
-  collision(e){
-    let npx = ((e.x+e.w/2)-(this.x+this.w/2))/this.w;
-    let npy = ((e.y+e.h/2)-(this.y+this.h/2))/this.h;
-    if (!(e.x+e.w<this.x || e.x>this.x+this.w || e.y+e.h<this.y || e.y>this.y+this.h)) {
-      if( Math.abs(npx) > Math.abs(npy) ){
-        if(npx>0){return [1, this.x+this.w - e.x]}
-        else{return [2, e.x + e.w - this.x]}
-      }
-      else{
-        if(npy>0){return [3, this.y + this.h - e.y]}
-        else {return [2, this.y + this.h - e.y]}
-      }
-    }
-    return 0;
-  }
 
   update(){}
 
@@ -61,6 +47,8 @@ class Player extends Entity{
     this.color = "rgb(145, 24, 201)";
     this.inputs = [false, false, false, false];
     this.prevInputs = [false, false, false, false];
+
+    this.collidedTypes.push(Entities.Obstacle);
   }
 
   update(){

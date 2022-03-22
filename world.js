@@ -30,12 +30,13 @@ class World{
       for(const e2 in this.entities){
         const entity2 = this.entities[e2];
         if(entity1!=entity2){
-          const result = entity1.collision(entity2);
-          if(result){
-            //entity1.y -= result[1];
-            //entity2.y += result[1];
-            entity1.vy = -0.05;
-            entity2.vy = -0.05;
+          if(entity1.collidedTypes.includes(entity2.type)){
+            const result = collision(entity1, entity2);
+            if(result){
+              entity1.collide(result);
+              entity1.vy = -0.05;
+              entity2.vy = -0.05;
+            }
           }
         }
       }
