@@ -33,7 +33,7 @@ class World{
           if(entity1.collidedTypes.includes(entity2.type)){
             const result = collision(entity1, entity2);
             if(result){
-              entity1.collide(result);
+              entity1.collide(entity2, result);
             }
           }
         }

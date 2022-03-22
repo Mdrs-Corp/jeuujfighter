@@ -35,82 +35,27 @@ context.shadowBlur=10
   document.addEventListener('contextmenu', event => event.preventDefault());
   document.addEventListener("keydown", (e) => {
     if (e.repeat) return
-    switch (e.keyCode) {
-      case 37:
-        world.inputPlayer(p1.id, 0, true)
-        break;
-      case 38:
-        world.inputPlayer(p1.id, 1, true)
-        break;
-      case 39:
-        world.inputPlayer(p1.id, 2, true)
-        break;
-      case 40:
-        world.inputPlayer(p1.id, 3, true)
-        break;
-      case 81:
-        world.inputPlayer(p2.id, 0, true)
-        break;
-      case 90:
-        world.inputPlayer(p2.id, 1, true)
-        break;
-      case 68:
-        world.inputPlayer(p2.id, 2, true)
-        break;
-      case 83:
-        world.inputPlayer(p2.id, 3, true)
-        break;
-      case 32:
-        if(p2.vx>0){
-          world.addPlayer(new Codiv(p2,1))
+    for(const player in world.players){
+      for(const key in world.players[player].inputKeys){
+        if (world.players[player].inputKeys[key] == e.keyCode) {
+          world.inputPlayer(player, key, true);
         }
-        else{
-          world.addPlayer(new Codiv(p2,-1))
-        }
-        break;
-        case 98:
-          if(p1.vx>0){
-            world.addPlayer(new Codiv(p1,1))
-          }
-          else{
-            world.addPlayer(new Codiv(p1,-1))
-          }
-
-      default:return
+      }
     }}, false);
 
 document.addEventListener("keyup", (e) => {
-  switch (e.keyCode) {
-    case 37:
-      world.inputPlayer(p1.id, 0, false)
-      break;
-    case 38:
-      world.inputPlayer(p1.id, 1, false)
-      break;
-    case 39:
-      world.inputPlayer(p1.id, 2, false)
-      break;
-    case 40:
-      world.inputPlayer(p1.id, 3, false)
-      break;
-    case 81:
-        world.inputPlayer(p2.id, 0, false)
-        break;
-      case 90:
-        world.inputPlayer(p2.id, 1, false)
-        break;
-      case 68:
-        world.inputPlayer(p2.id, 2, false)
-        break;
-      case 83:
-        world.inputPlayer(p2.id, 3, false)
-        break;
-      default:return
+  for(const player in world.players){
+    for(const key in world.players[player].inputKeys){
+      if (world.players[player].inputKeys[key] == e.keyCode) {
+        world.inputPlayer(player, key, false);
+      }
+    }
   }}, false);
 
 const world = new World();
 const p1 = new Player(-50, -20);
 const p2 = new Player(50, -20);
+p2.inputKeys = [81, 90, 68, 83, 72];
 p2.color="rgb(181,48,71)"
 world.addPlayer(p1);
 world.addPlayer(p2);
