@@ -30,8 +30,11 @@ class World{
       for(const e2 in this.entities){
         const entity2 = this.entities[e2];
         if(entity1!=entity2){
-          if(entity1.collision(entity2)){
-            entity1.vy = -0.0523;
+          const result = entity1.collision(entity2);
+          if(result){
+            //entity1.y -= result[1];
+            //entity2.y += result[1];
+            entity1.vy = -0.05;
             entity2.vy = -0.05;
           }
         }
@@ -64,9 +67,9 @@ class World{
         case "Breakable":
           entity = new Breakable(m[i].x, m[i].y, m[i].w, m[i].h)
           break;
-		case "Spike":
-		  entity = new Spike(m[i].x, m[i].y, m[i].w, m[i].h)
-	      break;
+        case "Spike":
+          entity = new Spike(m[i].x, m[i].y, m[i].w, m[i].h)
+          break;
         case "PaddleX":
           entity = new PaddleX(m[i].x, m[i].y, m[i].g)
           break;
