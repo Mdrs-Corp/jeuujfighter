@@ -34,8 +34,6 @@ class World{
             const result = collision(entity1, entity2);
             if(result){
               entity1.collide(result);
-              entity1.vy = -0.05;
-              entity2.vy = -0.05;
             }
           }
         }

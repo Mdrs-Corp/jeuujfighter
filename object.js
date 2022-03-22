@@ -41,7 +41,7 @@ const gravity = 0.13;
 
 class Player extends Entity{
   constructor(x, y){
-    super(Entities.Player, x, y, 10, 10);
+    super(Entities.Player, x, y, 15, 25);
     this.vx = 0;
     this.vy = 0;
     this.color = "rgb(145, 24, 201)";
@@ -52,16 +52,23 @@ class Player extends Entity{
   }
 
   update(){
-    if (this.inputs[0]) {this.vx -= 0.2;}
-    if (this.inputs[2]) {this.vx += 0.2;}
-    if (this.inputs[3]) {this.vy += 0.1;}
-    if (this.inputs[1] && !this.prevInputs[1]) {this.vy -= 3;}
+    if (this.inputs[0]) this.vx -= 0.2;
+    if (this.inputs[2]) this.vx += 0.2;
+    if (this.inputs[3]) this.vy += 0.1;
+    if (this.inputs[1] && !this.prevInputs[1]) this.vy = -3;
+
     this.x += this.vx;
     this.y += this.vy;
     this.vy += gravity;
     this.vy = Math.min(this.vy, 5);
     this.vx *= 0.9;
     this.prevInputs =  [...this.inputs];
+  }
+
+  collide(info){
+    if (info[0]==1) {
+      this.y-=info[1];
+    }
   }
 }
 
