@@ -22,12 +22,6 @@ class World {
     this.players[id].inputs[input] = value;
   }
   update() {
-    for (const i in this.entities) {
-      this.entities[i].update();
-      if (this.entities[i].toDelete) {
-        delete this.entities[i];
-      }
-    }
 
     for (const e1 in this.entities) {
       const entity1 = this.entities[e1];
@@ -41,6 +35,13 @@ class World {
             }
           }
         }
+      }
+    }
+    
+    for (const i in this.entities) {
+      this.entities[i].update();
+      if (this.entities[i].toDelete) {
+        delete this.entities[i];
       }
     }
   }

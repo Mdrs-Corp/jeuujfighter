@@ -37,13 +37,15 @@ class Obstacle extends Entity {
   }
 }
 
-const gravity = 0.13;
+const gravity = 0.2;
 
 class Player extends Entity {
   constructor(x, y) {
     super(Entities.Player, x, y, 15, 25);
     this.vx = 0;
     this.vy = 0;
+    this.ax = 0;
+    this.ay = 0;
     this.color = "rgb(145, 24, 201)";
     this.dir = 1;
 
@@ -57,16 +59,18 @@ class Player extends Entity {
   }
 
   update() {
-    if (this.inputs[0]) this.vx -= 0.2;
-    if (this.inputs[2]) this.vx += 0.2;
-    if (this.inputs[3]) this.vy += 0.1;
-    if (this.inputs[1] && !this.prevInputs[1]) this.vy = -3;
+    if (this.inputs[0]) this.ax -= 1;
+    if (this.inputs[2]) this.ax += 1;
+    if (this.inputs[3]) this.ay += 1;
+    if (this.inputs[1] && !this.prevInputs[1]) this.vy = -4;
 
     if (this.inputs[4] && !this.prevInputs[4]) {
       if (this.inputs[3]) {
-        this.world.addEntity(new AttackHitBox(this.x - 20, this.y + this.h - 10, 40 + this.w, 10, this.id, 200, 15, 0, 1))
+        this.world.addEntity(new AttackHitBox(this.x - 20, this.y + this.h - 10, 40 + this.w, 30, this.id, 0, 15, 0, 1))
+      }else if (this.inputs[1]) {
+        this.world.addEntity(new AttackHitBox(this.x - 10, this.y - 30, 20 + this.w, 30, this.id, 0, 10, 0, -1))
       }else {
-        this.world.addEntity(new AttackHitBox(this.x + this.w / 2 + (this.dir == 1 ? 0 : -20), this.y + 5, 20, 15, this.id, 100, 5, this.dir, 0))
+        this.world.addEntity(new AttackHitBox(this.x + this.w / 2 + (this.dir == 1 ? 0 : -20), this.y + 5, 20, 15, this.id, 0, 5, this.dir, 0))
       }
     }
 
@@ -76,12 +80,18 @@ class Player extends Entity {
     if (this.vx < 0) {
       this.dir = -1;
     }
+    this.vx += this.ax*0.2;
+    this.vy += this.ay*0.2;
+    this.ax = 0;
+    this.ay = 0;
+
+    this.vy += gravity;
+    this.vx *= 0.9;
+    this.vy = Math.min(this.vy, 5);
 
     this.x += this.vx;
     this.y += this.vy;
-    this.vy += gravity;
-    this.vy = Math.min(this.vy, 5);
-    this.vx *= 0.9;
+
     this.prevInputs = [...this.inputs];
   }
 
@@ -115,8 +125,8 @@ class AttackHitBox extends Entity {
 
   collide(entity) {
     if (entity.id != this.sender) {
-      entity.vx += this.dx * entity.percent / 500;
-      entity.vy += this.dy * entity.percent / 500;
+      entity.ax += this.dx * Math.min(5, entity.percent );
+      entity.ay += this.dy * Math.min(5, entity.percent );
 
       entity.percent += this.damage;
     }
