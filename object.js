@@ -63,7 +63,11 @@ class Player extends Entity {
     if (this.inputs[1] && !this.prevInputs[1]) this.vy = -3;
 
     if (this.inputs[4] && !this.prevInputs[4]) {
-      this.world.addEntity(new AttackHitBox(this.x + this.w / 2 + (this.dir == 1 ? 0 : -20), this.y + 5, 20, 15, this.id, 100, 5, this.dir, 0))
+      if (this.inputs[3]) {
+        this.world.addEntity(new AttackHitBox(this.x - 20, this.y + this.h - 10, 40 + this.w, 10, this.id, 200, 15, 0, 1))
+      }else {
+        this.world.addEntity(new AttackHitBox(this.x + this.w / 2 + (this.dir == 1 ? 0 : -20), this.y + 5, 20, 15, this.id, 100, 5, this.dir, 0))
+      }
     }
 
     if (this.vx > 0) {
