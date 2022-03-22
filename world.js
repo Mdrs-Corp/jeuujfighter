@@ -1,6 +1,6 @@
 class World{
   constructor(){
-    this.camera = {x: 300/2, y: 150/2, zoom: 5};
+    this.camera = {x: 0, y: 0, zoom: 5};
     this.entities = {};
     this.players = {};
   };

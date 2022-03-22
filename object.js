@@ -66,8 +66,9 @@ class Player extends Entity{
   }
 
   collide(info){
-    if (info[0]==1) {
+    if (info[0]==1 && this.vy > 0) {
       this.y-=info[1];
+      this.vy = 0;
     }
   }
 }

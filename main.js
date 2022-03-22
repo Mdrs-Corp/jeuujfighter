@@ -109,12 +109,14 @@ document.addEventListener("keyup", (e) => {
   }}, false);
 
 const world = new World();
-const p1 = new Player(100, 50);
-const p2 = new Player(50, 50);
+const p1 = new Player(-50, -20);
+const p2 = new Player(50, -20);
 p2.color="rgb(181,48,71)"
 world.addPlayer(p1);
 world.addPlayer(p2);
-world.addEntity(new Obstacle(20, 120, 250, 3));
+world.addEntity(new Obstacle(-120, 50, 240, 5));
+world.addEntity(new Obstacle(-80, 0, 60, 5));
+world.addEntity(new Obstacle(20, 0, 60, 5));
 
 let left = false;
 let up = false;
