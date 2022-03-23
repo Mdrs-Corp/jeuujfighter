@@ -1,6 +1,8 @@
 class Entities {
   static Obstacle = Symbol("Obstacle");
   static Player = Symbol("Player");
+  static Attack = Symbol("Attack");
+  static SmallPoop = Symbol("SmallPoop");
   static Codiv = Symbol("Codiv");
 }
 
@@ -49,9 +51,12 @@ class Player extends Entity {
     this.color = "rgb(145, 24, 201)";
     this.dir = 1;
 
-    this.inputKeys = [37, 38, 39, 40, 98];
-    this.inputs = [false, false, false, false, false];
-    this.prevInputs = [false, false, false, false, false];
+    this.jumping = null;
+    this.jumps = 2;
+
+    this.inputKeys = [37, 38, 39, 40, 98, 99];
+    this.inputs = [false, false, false, false, false, false];
+    this.prevInputs = [false, false, false, false, false, false];
 
     this.collidedTypes.push(Entities.Obstacle);
 
@@ -59,10 +64,24 @@ class Player extends Entity {
   }
 
   update() {
-    if (this.inputs[0]) this.ax -= 1;
-    if (this.inputs[2]) this.ax += 1;
+    if (this.inputs[0]) this.ax -= 3;
+    if (this.inputs[2]) this.ax += 3;
     if (this.inputs[3]) this.ay += 1;
-    if (this.inputs[1] && !this.prevInputs[1]) this.vy = -4;
+    if (this.inputs[1] && !this.prevInputs[1] && this.jumps > 0){
+      this.vy = -1.5;
+      this.jumping = Date.now();
+      this.jumps -= 1;
+    }
+    if (this.jumping != null) {
+      if (!this.inputs[1]) {
+        this.jumping = null;
+      }else{
+        if (Date.now()-this.jumping>70){
+          this.jumping = null;
+        }
+        this.vy += -0.4;
+      }
+    }
 
     if (this.inputs[4] && !this.prevInputs[4]) {
       if (this.inputs[3]) {
@@ -72,6 +91,10 @@ class Player extends Entity {
       }else {
         this.world.addEntity(new AttackHitBox(this.x + this.w / 2 + (this.dir == 1 ? 0 : -20), this.y + 5, 20, 15, this.id, 0, 5, this.dir, 0))
       }
+    }
+
+    if (this.inputs[5] && !this.prevInputs[5]) {
+        this.world.addEntity(new SmallPoop(this.x + this.w / 2, this.y + this.h / 2, 5, 5, this.id, this.dir, 0))
     }
 
     if (this.vx > 0) {
@@ -86,7 +109,7 @@ class Player extends Entity {
     this.ay = 0;
 
     this.vy += gravity;
-    this.vx *= 0.9;
+    this.vx *= 0.8;
     this.vy = Math.min(this.vy, 5);
 
     this.x += this.vx;
@@ -97,6 +120,7 @@ class Player extends Entity {
 
   collide(entity, info) {
     if (info[0] == 1 && this.vy > 0) {
+      this.jumps = 2;
       this.y -= info[1];
       this.vy = 0;
     }
@@ -105,7 +129,7 @@ class Player extends Entity {
 
 class AttackHitBox extends Entity {
   constructor(x, y, w, h, sender, time, damage, dx, dy) {
-    super(Entities.Attack, x, y, w, h);
+    super(Entities.Attacks, x, y, w, h);
     this.collidedTypes.push(Entities.Player);
     this.sender = sender;
 
@@ -125,23 +149,36 @@ class AttackHitBox extends Entity {
 
   collide(entity) {
     if (entity.id != this.sender) {
-      entity.ax += this.dx * Math.max(2, entity.percent / 10);
-      entity.ay += this.dy * Math.max(2, entity.percent / 10);
+      entity.ax += this.dx * Math.max(10, entity.percent / 10);
+      entity.ay += this.dy * Math.max(10, entity.percent / 10);
 
       entity.percent += this.damage;
     }
   }
 }
 
-class Codiv extends Entity {
-  constructor(parent, dir) {
-    super(Entities.Codiv, parent.x + 20 * dir, parent.y, 5, 5);
-    this.vy = dir;
-    this.color = parent.color == "rgb(145, 24, 201)" ? "#ae00ff" : "#ff0000";
-    this.friend = parent;
+
+class SmallPoop extends Entity {
+  constructor(x, y, w, h, sender, dx, dy) {
+    super(Entities.SmallPoop, x, y, w, h);
+
+    this.sender = sender;
+
+    this.dx = dx;
+    this.dy = dy;
+
+    this.vx = dx*4;
+    this.vy = dy*4;
+
   }
 
+
   update() {
-    this.x += this.vy;
+    this.x += this.vx;
+    this.y += this.vy;
+    this.vy += 0.01;
+    this.vx *= 0.99;
+    this.world.addEntity(new AttackHitBox(this.x, this.y, 5, 5, this.sender, 0, 10, this.dx, this.dy))
   }
+
 }

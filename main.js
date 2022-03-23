@@ -58,7 +58,7 @@ function main() {
   const world = new World();
   const p1 = new Player(-50, -20);
   const p2 = new Player(50, -20);
-  p2.inputKeys = [81, 90, 68, 83, 72];
+  p2.inputKeys = [81, 90, 68, 83, 72, 74];
   p2.color = "rgb(181,48,71)"
   world.addPlayer(p1);
   world.addPlayer(p2);
